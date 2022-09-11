@@ -16,11 +16,25 @@ class Value:
 
     # Operator overloading
     def __add__(self, other):
-        out = Value(self.data + other.data, (self, other), "+")
+        other = other if isinstance(other, Value) else Value(other)
+        out = Value(self.data + other.data, (self, other), '+')
+
+        def _backward():
+            self.grad += out.grad
+            other.grad += out.grad
+        out._backward = _backward
+
         return out
 
     def __mul__(self, other):
-        out = Value(self.data * other.data, (self, other), "*")
+        other = other if isinstance(other, Value) else Value(other)
+        out = Value(self.data * other.data, (self, other), '*')
+
+        def _backward():
+            self.grad += other.data * out.grad
+            other.grad += self.data * out.grad
+        out._backward = _backward
+
         return out
 
     def __pow__(self, other: Union[int, float]):
