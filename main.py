@@ -29,4 +29,3 @@ for k in range(100):
         p.data -= 0.03 * p.grad
 
     print(f"{str(k).center(len('Iteration'))}\t{loss.data :.5f}")
-
